@@ -1,0 +1,30 @@
+SAMPLE DATA IDs
+============================================================
+
+PRODUCTS:
+  LAPTOP-001: 2e85927d-0281-4529-9d24-50802da838e1
+  PHONE-001: 3542ed84-4aa4-4bda-9120-f9ff2755184a
+  TABLET-001: 2ce615cd-d188-4f23-ba3d-a0a62ce24a3a
+  WATCH-001: dd1221a2-4868-4675-9805-bd257761fb84
+  AUDIO-001: 5cf3c013-6018-409a-8dc9-4944e81f40ec
+
+STORES:
+  DT-001: b5e807a7-2d21-4e4a-bafd-c764e4ffda81
+  ML-001: 0992288d-b192-4092-bfae-062eff28d821
+  WH-001: 7e0822e7-ee7f-44ad-916e-e6e753bb317e
+
+============================================================
+API EXAMPLES:
+============================================================
+
+# Check stock:
+GET /api/v1/inventory/products/2e85927d-0281-4529-9d24-50802da838e1/stores/b5e807a7-2d21-4e4a-bafd-c764e4ffda81
+
+# Reserve stock:
+POST /api/v1/inventory/reserve
+{
+  "product_id": "2e85927d-0281-4529-9d24-50802da838e1",
+  "store_id": "b5e807a7-2d21-4e4a-bafd-c764e4ffda81",
+  "quantity": 2
+}
+
