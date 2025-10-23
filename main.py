@@ -7,6 +7,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
 
 from src.infrastructure.persistence.event_store import EventStore
 from src.infrastructure.persistence.read_model_repository import ReadModelRepository
@@ -55,52 +57,48 @@ async def lifespan(app: FastAPI):
     cache = InMemoryCache(default_ttl=30)
     event_bus = EventBus()
     
-    # Setup event handlers to update read models
-    async def update_read_model_on_stock_added(event):
-        """Update read model when stock is added"""
+    # Setup event handlers to invalidate cache
+    async def invalidate_cache_on_stock_added(event):
+        """Invalidate cache when stock is added"""
         logger.info("event_received", event_type="StockAdded", 
                    product_id=str(event.product_id), store_id=str(event.store_id))
-        await read_model_repo.update_from_event(event)
         # Invalidate cache
         cache_key = f"stock:{event.product_id}:{event.store_id}"
         await cache.delete(cache_key)
-        logger.info("read_model_updated", event_type="StockAdded")
+        logger.info("cache_invalidated", event_type="StockAdded")
     
-    async def update_read_model_on_stock_reserved(event):
-        """Update read model when stock is reserved"""
+    async def invalidate_cache_on_stock_reserved(event):
+        """Invalidate cache when stock is reserved"""
         logger.info("event_received", event_type="StockReserved",
                    product_id=str(event.product_id), store_id=str(event.store_id))
-        await read_model_repo.update_from_event(event)
         # Invalidate cache
         cache_key = f"stock:{event.product_id}:{event.store_id}"
         await cache.delete(cache_key)
-        logger.info("read_model_updated", event_type="StockReserved")
+        logger.info("cache_invalidated", event_type="StockReserved")
     
-    async def update_read_model_on_reservation_committed(event):
-        """Update read model when reservation is committed"""
+    async def invalidate_cache_on_reservation_committed(event):
+        """Invalidate cache when reservation is committed"""
         logger.info("event_received", event_type="ReservationCommitted",
                    product_id=str(event.product_id), store_id=str(event.store_id))
-        await read_model_repo.update_from_event(event)
         # Invalidate cache
         cache_key = f"stock:{event.product_id}:{event.store_id}"
         await cache.delete(cache_key)
-        logger.info("read_model_updated", event_type="ReservationCommitted")
+        logger.info("cache_invalidated", event_type="ReservationCommitted")
     
-    async def update_read_model_on_reservation_released(event):
-        """Update read model when reservation is released"""
+    async def invalidate_cache_on_reservation_released(event):
+        """Invalidate cache when reservation is released"""
         logger.info("event_received", event_type="ReservationReleased",
                    product_id=str(event.product_id), store_id=str(event.store_id))
-        await read_model_repo.update_from_event(event)
         # Invalidate cache
         cache_key = f"stock:{event.product_id}:{event.store_id}"
         await cache.delete(cache_key)
-        logger.info("read_model_updated", event_type="ReservationReleased")
+        logger.info("cache_invalidated", event_type="ReservationReleased")
     
     # Subscribe to events
-    event_bus.subscribe("StockAdded", update_read_model_on_stock_added)
-    event_bus.subscribe("StockReserved", update_read_model_on_stock_reserved)
-    event_bus.subscribe("ReservationCommitted", update_read_model_on_reservation_committed)
-    event_bus.subscribe("ReservationReleased", update_read_model_on_reservation_released)
+    event_bus.subscribe("StockAdded", invalidate_cache_on_stock_added)
+    event_bus.subscribe("StockReserved", invalidate_cache_on_stock_reserved)
+    event_bus.subscribe("ReservationCommitted", invalidate_cache_on_reservation_committed)
+    event_bus.subscribe("ReservationReleased", invalidate_cache_on_reservation_released)
     
     logger.info("event_handlers_registered", 
                handlers=["StockAdded", "StockReserved", "ReservationCommitted", "ReservationReleased"])
@@ -159,6 +157,19 @@ app.add_middleware(LoggingMiddleware)
 
 
 # Exception handlers
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle Pydantic validation errors"""
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            "error": "validation_error",
+            "detail": exc.errors(),
+            "body": exc.body
+        }
+    )
+
+
 @app.exception_handler(InsufficientStockError)
 async def insufficient_stock_handler(request: Request, exc: InsufficientStockError):
     """Handle insufficient stock errors"""

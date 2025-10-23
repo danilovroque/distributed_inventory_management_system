@@ -126,6 +126,7 @@ class Inventory:
             reservation_id=reservation_id,
             customer_id=customer_id,
             quantity=quantity,
+            expires_at=reservation.expires_at,
             timestamp=datetime.utcnow(),
             version=self.version,
         )

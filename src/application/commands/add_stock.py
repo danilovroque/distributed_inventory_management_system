@@ -81,6 +81,8 @@ class AddStockHandler:
         store_id: UUID
     ) -> Inventory:
         """Rebuild inventory from events (event sourcing)"""
+        from ...domain.entities.inventory import Reservation
+        
         inventory = Inventory(product_id=product_id, store_id=store_id)
         
         for event in events:
@@ -95,10 +97,21 @@ class AddStockHandler:
                 inventory.reserved = inventory.reserved.add(
                     StockQuantity(event.quantity)
                 )
+                # Rebuild reservation in memory
+                reservation = Reservation(
+                    id=event.reservation_id,
+                    customer_id=event.customer_id,
+                    quantity=event.quantity,
+                    created_at=event.timestamp,
+                    expires_at=event.expires_at
+                )
+                inventory.reservations[event.reservation_id] = reservation
             elif event.event_type == "ReservationCommitted":
                 inventory.reserved = inventory.reserved.subtract(
                     StockQuantity(event.quantity)
                 )
+                # Remove reservation from memory if present
+                inventory.reservations.pop(event.reservation_id, None)
             elif event.event_type == "ReservationReleased":
                 inventory.reserved = inventory.reserved.subtract(
                     StockQuantity(event.quantity)
@@ -106,6 +119,8 @@ class AddStockHandler:
                 inventory.available = inventory.available.add(
                     StockQuantity(event.quantity)
                 )
+                # Remove reservation from memory if present
+                inventory.reservations.pop(event.reservation_id, None)
             elif event.event_type == "StockAdjusted":
                 inventory.available = StockQuantity(event.new_quantity)
             

@@ -31,6 +31,7 @@ class StockReserved(DomainEvent):
     reservation_id: UUID = None
     customer_id: UUID = None
     quantity: int = 0
+    expires_at: datetime = None
 
 
 @dataclass
