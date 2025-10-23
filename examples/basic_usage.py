@@ -18,14 +18,16 @@ async def main():
         # Generate IDs
         product_id = str(uuid4())
         store_id = str(uuid4())
+        customer_id = str(uuid4())
+        order_id = str(uuid4())
         
         print("=" * 60)
         print("Inventory Management System - Basic Usage Examples")
         print("=" * 60)
         
-        # 1. Health Check
+        # 1. Health Check (note: health endpoint is not under /api/v1)
         print("\n1. Health Check")
-        response = await client.get(f"{BASE_URL}/health")
+        response = await client.get("http://localhost:8000/health")
         print(f"Status: {response.status_code}")
         print(f"Response: {response.json()}")
         
@@ -71,46 +73,53 @@ async def main():
             json={
                 "product_id": product_id,
                 "store_id": store_id,
-                "quantity": 10
+                "quantity": 10,
+                "customer_id": customer_id,
+                "ttl_minutes": 30
             }
         )
         print(f"Status: {response.status_code}")
         reservation_data = response.json()
         print(f"Response: {reservation_data}")
-        reservation_id = reservation_data["reservation_id"]
         
-        # 6. Get Stock After Reservation
-        print("\n6. Get Stock After Reservation")
-        response = await client.get(
-            f"{BASE_URL}/inventory/products/{product_id}/stores/{store_id}"
-        )
-        print(f"Status: {response.status_code}")
-        stock_data = response.json()
-        print(f"Response: {stock_data}")
-        print(f"Available: {stock_data['available']} (should be 90)")
-        
-        # 7. Commit Reservation
-        print("\n7. Commit Reservation (finalize sale)")
-        response = await client.post(
-            f"{BASE_URL}/inventory/commit",
-            json={
-                "product_id": product_id,
-                "store_id": store_id,
-                "reservation_id": reservation_id
-            }
-        )
-        print(f"Status: {response.status_code}")
-        print(f"Response: {response.json()}")
-        
-        # 8. Final Stock Check
-        print("\n8. Final Stock Check")
-        response = await client.get(
-            f"{BASE_URL}/inventory/products/{product_id}/stores/{store_id}"
-        )
-        print(f"Status: {response.status_code}")
-        final_stock = response.json()
-        print(f"Response: {final_stock}")
-        print(f"Final quantity: {final_stock['quantity']} (should be 90)")
+        if response.status_code == 201:
+            reservation_id = reservation_data["reservation_id"]
+            
+            # 6. Get Stock After Reservation
+            print("\n6. Get Stock After Reservation")
+            response = await client.get(
+                f"{BASE_URL}/inventory/products/{product_id}/stores/{store_id}"
+            )
+            print(f"Status: {response.status_code}")
+            stock_data = response.json()
+            print(f"Response: {stock_data}")
+            print(f"Available: {stock_data['available']} (should be 90)")
+            
+            # 7. Commit Reservation
+            print("\n7. Commit Reservation (finalize sale)")
+            response = await client.post(
+                f"{BASE_URL}/inventory/commit",
+                json={
+                    "product_id": product_id,
+                    "store_id": store_id,
+                    "reservation_id": reservation_id,
+                    "order_id": order_id
+                }
+            )
+            print(f"Status: {response.status_code}")
+            print(f"Response: {response.json()}")
+            
+            # 8. Final Stock Check
+            print("\n8. Final Stock Check")
+            response = await client.get(
+                f"{BASE_URL}/inventory/products/{product_id}/stores/{store_id}"
+            )
+            print(f"Status: {response.status_code}")
+            final_stock = response.json()
+            print(f"Response: {final_stock}")
+            print(f"Final quantity: {final_stock['total']} (should be 90)")
+        else:
+            print("⚠️  Reservation failed, skipping commit and final check steps")
         
         # 9. Test Insufficient Stock
         print("\n9. Test Insufficient Stock (try to reserve 200 units)")
@@ -119,7 +128,9 @@ async def main():
             json={
                 "product_id": product_id,
                 "store_id": store_id,
-                "quantity": 200
+                "quantity": 200,
+                "customer_id": customer_id,
+                "ttl_minutes": 30
             }
         )
         print(f"Status: {response.status_code}")
