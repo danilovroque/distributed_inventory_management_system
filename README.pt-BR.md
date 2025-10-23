@@ -2,8 +2,6 @@
 
 Um sistema de gerenciamento de inventário distribuído de alta performance, construído com Event Sourcing, CQRS e seguindo os princípios de Clean Architecture.
 
-[English version](README.md)
-
 ## 🏗️ Visão Geral da Arquitetura
 
 Este sistema implementa uma arquitetura distribuída moderna para resolver problemas de consistência e latência de inventário em um ambiente varejista multi-loja.
@@ -48,18 +46,12 @@ Este sistema implementa uma arquitetura distribuída moderna para resolver probl
 
 ### Instalação
 
-1. Clone o repositório:
-```bash
-git clone <url-do-repositorio>
-cd inventory-system
-```
-
-2. Instale as dependências:
+1. Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Execute a aplicação:
+2. Execute a aplicação:
 ```bash
 python main.py
 ```
@@ -150,13 +142,6 @@ A documentação interativa da API está disponível em:
 | Cache em memória | Leituras muito rápidas | Uso de memória, invalidação de cache |
 | Optimistic locking | Sem locks distribuídos | Overhead de retry em conflitos |
 
-## 📈 Características de Performance
-
-- **Latência de escrita**: ~50ms (p95)
-- **Latência de leitura**: ~5ms com cache, ~20ms sem cache (p95)
-- **Throughput**: ~1000 req/s por instância
-- **Taxa de acerto de cache**: ~90% para operações de leitura
-
 ## 🔐 Considerações de Segurança
 
 - Validação de entrada com Pydantic
@@ -177,6 +162,6 @@ A documentação interativa da API está disponível em:
 ## 📝 Ferramentas de Desenvolvimento Utilizadas
 
 - **IDE**: Visual Studio Code com extensões Python
-- **GenAI**: GitHub Copilot para geração de código e sugestões
 - **Testes**: pytest
 - **Documentação**: OpenAPI/Swagger
+- **GenAI**: GitHub Copilot para geração de código e sugestões

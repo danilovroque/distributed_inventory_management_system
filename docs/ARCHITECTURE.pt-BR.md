@@ -284,7 +284,6 @@ Todos os logs são JSON estruturado:
 |------------|---------------|
 | **FastAPI** | Moderno, assíncrono, docs auto-geradas |
 | **Pydantic** | Validação em runtime, type safety |
-| **SQLite** | Simples, embarcado, bom para protótipo |
 | **JSON** | Eventos legíveis por humanos, fácil depuração |
 | **structlog** | Logging estruturado, pronto para produção |
 | **pytest** | Padrão da indústria, suporte async |
