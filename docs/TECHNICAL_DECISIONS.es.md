@@ -678,10 +678,3 @@ Al tomar decisiones técnicas, considerar:
 ## Reversibilidad
 [¿Qué tan difícil es cambiar más tarde?]
 ```
-
----
-
-Para más detalles técnicos, consulta:
-- [Documentación de Arquitectura](ARCHITECTURE.es.md)
-- [Diseño de API](API_DESIGN.es.md)
-- [Guía de Inicio Rápido](../QUICKSTART.es.md)

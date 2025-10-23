@@ -1,5 +1,7 @@
 # 🚀 Como Executar o Sistema Localmente
 
+**🌍 Outros idiomas:** [🇺🇸 English](HOW_TO_RUN.md) | [🇪🇸 Español](COMO_EJECUTAR.md)
+
 ## 📋 Visão Geral
 
 Este documento explica como o sistema de eventos funciona localmente e como inicializar tudo.

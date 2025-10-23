@@ -1,6 +1,6 @@
 # Arquitetura do Sistema
 
-[English version](ARCHITECTURE.md)
+[🇺🇸 English](ARCHITECTURE.md) | [🇧🇷 Português](ARCHITECTURE.pt-BR.md) | [🇪🇸 Español](ARCHITECTURE.es.md)
 
 ## Visão Geral
 
@@ -321,7 +321,3 @@ Todos os logs são JSON estruturado:
    - Rate limiting
    - Autenticação/Autorização
    - Roteamento de requisições
-
----
-
-Esta arquitetura equilibra simplicidade para demonstração com padrões que escalam para cargas de trabalho de produção.

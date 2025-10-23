@@ -1,6 +1,6 @@
 # Documento de Decisões Técnicas
 
-[English version](TECHNICAL_DECISIONS.md)
+[🇺🇸 English](TECHNICAL_DECISIONS.md) | [🇧🇷 Português](TECHNICAL_DECISIONS.pt-BR.md) | [🇪🇸 Español](TECHNICAL_DECISIONS.es.md)
 
 ## Visão Geral
 
@@ -319,7 +319,3 @@ Demonstrar práticas modernas de desenvolvimento com assistência de IA.
 3. Considerar persistência poliglota
 4. Implementar padrão SAGA para transações complexas
 5. Adicionar camada GraphQL para consultas flexíveis
-
----
-
-Este documento serve como referência para entender por que escolhas técnicas específicas foram feitas e pode guiar futuras decisões de desenvolvimento.

@@ -1,5 +1,7 @@
 # Sistema de Gerenciamento de Inventário Distribuído
 
+**🌍 Outros idiomas:** [🇺🇸 English](README.md) | [🇪🇸 Español](README.es.md)
+
 Um sistema de gerenciamento de inventário distribuído de alta performance, construído com Event Sourcing, CQRS e seguindo os princípios de Clean Architecture.
 
 ## 🏗️ Visão Geral da Arquitetura
