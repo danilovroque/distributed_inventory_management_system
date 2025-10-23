@@ -1,0 +1,42 @@
+DADOS DE AMOSTRA - MERCADOLIBRE BRASIL
+======================================================================
+
+PRODUTOS:
+  MLB-S24U-256-PT: d2469cbf-a28c-4c64-a96b-96bc3b2c3e1c
+  MLB-IP15PM-128-TN: 222bd681-5a78-4b0f-b4a5-40e8980d7734
+  MLB-DELL-I15-I5-8G: c81fb4e1-029f-4ec0-ab5d-20cdd1bdf00e
+  MLB-PS5-STD-BR: 24e6216f-ef13-4e93-b370-c37b64d8b1b4
+  MLB-AW9-GPS-41-MN: 8d685b4f-7ec8-4d73-99ca-9af63280ada7
+  MLB-APP2-USBC-BR: 4c60778e-739f-4412-9385-25ac5047b6f6
+  MLB-AF1-07-WHT-BR: b2fe4953-c8c1-4adb-ae94-bda5dd11fb31
+  MLB-LG55-4K-THINQ: ea3a4145-b3b5-4f22-b3d8-d667022bf67a
+  MLB-BRAST-FF-462L: 4f560d6b-534b-4751-a421-3111e16796e6
+  MLB-NAT-HOM-ESS-100: f67d5092-725d-40a2-bb20-edc5fed5e941
+
+CENTROS DE DISTRIBUIÇÃO:
+  MELI-CD-SP: 5c61b615-d208-455f-9abf-0919082bd671
+  MELI-CD-RJ: 5515fa2a-639f-4e18-9e6d-034b2385b340
+  MELI-CD-BH: 85700810-bd50-47b1-8c1c-ef4251171c18
+  MELI-FC-CP: 8653f868-f891-4ca6-a6b3-fcda40be976a
+  MELI-HUB-ZS-SP: f79f3904-efd2-49ea-8d21-541b43ca3bd0
+  MELI-ME-FL: a0169e54-0102-4937-8e22-1cf6922d494e
+  MELI-XD-GRU: 9da022b6-46f2-4823-93df-d7cf6efd0329
+  MELI-SF-ABC: d7d97088-e025-40ed-b39f-a46c063e7794
+  MELI-PR-IGU: 063cd429-538f-4d03-b1bc-9c304496aeca
+  MELI-CL-BSB: 0080ef85-f1d3-404c-afd2-64bbae960a50
+
+======================================================================
+EXEMPLOS DE API:
+======================================================================
+
+# Verificar estoque:
+GET /api/v1/inventory/products/d2469cbf-a28c-4c64-a96b-96bc3b2c3e1c/stores/5c61b615-d208-455f-9abf-0919082bd671
+
+# Reservar estoque:
+POST /api/v1/inventory/reserve
+{
+  "product_id": "d2469cbf-a28c-4c64-a96b-96bc3b2c3e1c",
+  "store_id": "5c61b615-d208-455f-9abf-0919082bd671",
+  "quantity": 2
+}
+
